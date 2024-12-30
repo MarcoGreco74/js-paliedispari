@@ -42,6 +42,12 @@ Stabiliamo se la somma dei due numeri è pari o dispari (usando una funzione) Di
 let btnRandom = document.getElementById('btnRandom');
 let btnVerifica = document.getElementById('btnVerificaVincitore');
 let vincitore = document.getElementById('vincitore');
+let azzera = document.getElementById('btnReset');
+let arrRisultati = [];
+let msg = '';
+let tentativi = 0;
+let vittoriaMia = 0;
+let vittoriaComputer = 0;
 const dati = {numeroMio : '', numeroComputer: '', scelta: {pari: false, dispari: false}}; // oggetto che inizializza i dati da inserire
 const error = {numeroMio : '', numeroComputer: '', scelta: ''}; // oggetto che inizializza gli errori relativi ai campi da compilare
 
@@ -85,18 +91,43 @@ btnVerifica.addEventListener('click', (e)=>{
     verificaVincitore();
   }
 });
-// funzione di convalida per stabilire chi è il vincitore
+// funzione di convalida per stabilire chi è il vincitore dopo massimo 5 tentativi
 function verificaVincitore(){
   let risultato = sum(dati.numeroMio, dati.numeroComputer);
   let userChoice = dati.scelta.pari.checked ? 'pari' : 'dispari';
   if(risultato %2 === 0 && userChoice === 'pari'){
-    vincitore.innerHTML = '<h3>Hai vinto</h3>';
+    msg+='<strong class="text-success";">Hai vinto </strong>';
+    arrRisultati.unshift(msg);
+    tentativi++;
+    vittoriaMia++;
   }else if(risultato %2 !== 0 && userChoice === 'dispari'){
-    vincitore.innerHTML = '<h3>Hai vinto</h3>';
+    msg+='<strong class="text-success";">Hai vinto </strong>';
+    arrRisultati.unshift(msg);
+    tentativi++;
+    vittoriaMia++
   }else{
-    vincitore.innerHTML = '<h3>Ha vinto il computer</h3>';
+    msg+='<strong class="text-danger"">Ha vinto il computer </strong>';
+    arrRisultati.unshift(msg);
+    tentativi++;
+    vittoriaComputer++;
+  }
+  if(tentativi < 5){
+    vincitore.innerHTML = arrRisultati;
+    arrRisultati = [];
+  }else{
+    vincitore.innerHTML = vittoriaMia > vittoriaComputer ? '<h2 class="text-success">Hai vinto</h2>' : '<h2 class="text-danger">Hai perso</h2>';
   }
 }
+
+azzera.addEventListener('click', (e)=>{
+  e.preventDefault();
+  let text = 'Vuoi azzerare i risultati?';
+  if(confirm(text) == true){
+     vincitore.innerHTML = '';
+  }else{
+    vincitore.style.display = 'block';
+  }
+});
 // OPPURE:
 /*let btnRandom = document.getElementById('btnRandom');
 let btnVerifica = document.getElementById('btnVerificaVincitore');
