@@ -44,6 +44,7 @@ let btnVerifica = document.getElementById('btnVerificaVincitore');
 let vincitore = document.getElementById('vincitore');
 let azzera = document.getElementById('btnReset');
 let arrRisultati = [];
+let arrVittoria = [];
 let msg = '';
 let tentativi = 0;
 let vittoriaMia = 0;
@@ -92,7 +93,7 @@ btnVerifica.addEventListener('click', (e)=>{
   }
 });
 // funzione di convalida per stabilire chi è il vincitore dopo massimo 5 tentativi
-function verificaVincitore(){
+function verificaVincitore(){ 
   let risultato = sum(dati.numeroMio, dati.numeroComputer);
   let userChoice = dati.scelta.pari.checked ? 'pari' : 'dispari';
   if(risultato %2 === 0 && userChoice === 'pari'){
@@ -104,7 +105,7 @@ function verificaVincitore(){
     msg+='<strong class="text-success";">Hai vinto </strong>';
     arrRisultati.unshift(msg);
     tentativi++;
-    vittoriaMia++
+    vittoriaMia++;
   }else{
     msg+='<strong class="text-danger"">Ha vinto il computer </strong>';
     arrRisultati.unshift(msg);
@@ -112,22 +113,41 @@ function verificaVincitore(){
     vittoriaComputer++;
   }
   if(tentativi < 5){
-    vincitore.innerHTML = arrRisultati;
-    arrRisultati = [];
+    vincitore.innerHTML = arrRisultati[0];
   }else{
-    vincitore.innerHTML = vittoriaMia > vittoriaComputer ? '<h2 class="text-success">Hai vinto</h2>' : '<h2 class="text-danger">Hai perso</h2>';
+    let vittoria = vittoriaMia > vittoriaComputer ? '<h2 class="text-success">Hai vinto</h2>' : '<h2 class="text-danger">Hai perso</h2>';
+    vincitore.innerHTML = vittoria;
+    arrRisultati.length = 0;
+    arrVittoria.unshift(vittoria);
   }
+}
+
+function storico(){
+  let newDiv = document.createElement('div');
+  newDiv.innerHTML = arrVittoria;
+  document.getElementById('storico').after(newDiv); // l'ultimo risultato viene visualizzato per primo 
 }
 
 azzera.addEventListener('click', (e)=>{
   e.preventDefault();
+  console.log(arrVittoria);
   let text = 'Vuoi azzerare i risultati?';
   if(confirm(text) == true){
-     vincitore.innerHTML = '';
+    storico();
+    arrRisultati.length = 0; // azzera array esistente
+    arrVittoria.length = 0;  // devo svuotare l'array altrimenti la visualizzazione non è corretta in quanto mi stampa più volte l'array ad ogni click
+    //arrRisultati.splice(0, arrRisultati.length); // restituisce copia dell'array
+    vincitore.innerHTML = "";
+    vittoriaMia = 0;
+    vittoriaComputer = 0;
+    tentativi = 0;
   }else{
     vincitore.style.display = 'block';
   }
 });
+ /* NON RIESCO A SVUOTARE arrRisultati AD OGNI CLICK DI AZZERA */
+
+
 // OPPURE:
 /*let btnRandom = document.getElementById('btnRandom');
 let btnVerifica = document.getElementById('btnVerificaVincitore');
