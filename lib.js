@@ -42,7 +42,8 @@ Stabiliamo se la somma dei due numeri è pari o dispari (usando una funzione) Di
 let btnRandom = document.getElementById('btnRandom');
 let btnVerifica = document.getElementById('btnVerificaVincitore');
 let vincitore = document.getElementById('vincitore');
-let azzera = document.getElementById('btnReset');
+let nuovaPartita = document.getElementById('btnReset'); 
+let cxlStorico = document.getElementById('cxlStorico');
 let arrRisultati = [];
 let arrVittoria = [];
 let msg = '';
@@ -114,11 +115,13 @@ function verificaVincitore(){
   }
   if(tentativi < 5){
     vincitore.innerHTML = arrRisultati[0];
+  }else if(tentativi > 5){  // se clicco più di 5 verifiche visualizzo il seguente messaggio e la funzione returna.
+    vincitore.innerHTML = '<h4>Inizia una nuova partita</h4>';
+    return;
   }else{
     let vittoria = vittoriaMia > vittoriaComputer ? '<h2 class="text-success">Hai vinto</h2>' : '<h2 class="text-danger">Hai perso</h2>';
-    vincitore.innerHTML = vittoria;
-    arrRisultati.length = 0;
     arrVittoria.unshift(vittoria);
+    storico();
   }
 }
 
@@ -130,27 +133,34 @@ function storico(){
   document.getElementById('storico').after(newDiv); // l'ultimo risultato viene visualizzato per primo 
 }
 
-azzera.addEventListener('click', (e)=>{
+nuovaPartita.addEventListener('click', (e)=>{
   e.preventDefault();
-  console.log(arrVittoria);
-  let text = 'Vuoi azzerare i risultati?';
+  let text = "Vuoi cominciare un'altra partita?";
   if(confirm(text) == true){
-    storico();
     arrRisultati.length = 0; // azzera array esistente
-    arrVittoria.length = 0;  // devo svuotare l'array altrimenti la visualizzazione non è corretta in quanto mi stampa più volte l'array ad ogni click
+    arrVittoria.length = 0;  // devo svuotare l'array esistente altrimenti la visualizzazione non è corretta in quanto mi stampa più volte l'array ad ogni click
     //arrRisultati.splice(0, arrRisultati.length); // restituisce copia dell'array
     vincitore.innerHTML = "";
     vittoriaMia = 0;
     vittoriaComputer = 0;
     tentativi = 0;
+    msg = '';
   }else{
     vincitore.style.display = 'block';
   }
 });
- /* NON RIESCO A SVUOTARE arrRisultati AD OGNI CLICK DI AZZERA */
 
+cxlStorico.addEventListener('click', (e)=>{
+    e.preventDefault();
+    let text = 'Vuoi azzerare i risultati?';
+    if(confirm(text) == true){
+      location.reload();
+    }else{
+      vincitore.style.display = 'block';
+    }
+ });
 
-// OPPURE:
+// OPPURE (prima strategia molto basilare):
 /*let btnRandom = document.getElementById('btnRandom');
 let btnVerifica = document.getElementById('btnVerificaVincitore');
 let pari = document.getElementById('pari');
