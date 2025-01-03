@@ -124,6 +124,8 @@ function verificaVincitore(){
 
 function storico(){
   let newDiv = document.createElement('div');
+  newDiv.style.backgroundColor = '#c9e2ef';
+  newDiv.style.border = '2px solid grey';
   newDiv.innerHTML = arrVittoria;
   document.getElementById('storico').after(newDiv); // l'ultimo risultato viene visualizzato per primo 
 }
